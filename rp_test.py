@@ -1,19 +1,13 @@
-#from pitop import Pitop
-from pitop import miniscreen
+from pitop import Pitop
 from time import sleep
 
-ms = miniscreen
-print(ms)
-m = ms.Miniscreen()
-print(m)
+miniscreen = Pitop().miniscreen
 
-up = miniscreen.UpButton
+up = miniscreen.up_button
+down = miniscreen.down_button
+select = miniscreen.select_button
+cancel = miniscreen.cancel_button
 
-down = miniscreen.DownButton
-
-select = miniscreen.SelectButton
-
-cancel = miniscreen.CancelButton
 # define (def) actions for each of the buttons
 
 def up_action():
@@ -27,11 +21,9 @@ def select_action():
 
 def cancel_action():
     print ("CANCEL is pressed")
-
-# Now, the algorithm
 while True:
     up.when_pressed = up_action
     down.when_pressed = down_action
     select.when_pressed = select_action
     cancel.when_pressed = cancel_action
-#sleep(5)
+sleep(5)
