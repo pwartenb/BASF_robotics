@@ -279,6 +279,6 @@ class Dexarm:
 
     def motion_mode(self):
         """
-        Rotate arm n degrees
+        Puts arm into motion
         """
         self._send_cmd("M2001\r")

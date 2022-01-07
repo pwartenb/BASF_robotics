@@ -26,8 +26,9 @@ def red_marks(dexarm):
     dexarm.fast_move_to(65, 315, 0)
     dexarm.go_home()
 
+#dexarm.soft_gripper_nature()
 dexarm.set_module_type(2)
-# dexarm.go_home()
+#dexarm.go_home()
 # dexarm.fast_move_to(340, 0, 150)
 # dexarm.fast_move_to(0, 340, 150)
 dexarm.fast_move_to(0, 340, 150)

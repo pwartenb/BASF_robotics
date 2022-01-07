@@ -141,12 +141,6 @@ class Color_block_recogn():
 def recogn_main():
     video.open(0,320,240)
     revogn = Color_block_recogn(red_hsv,feature_param,rgb_param)
-    # while True:
-    #     #img,inRange_hsv = revogn.get_target_img(video.get_img(1))
-    #     #cv2.imshow('inRange_hsv', inRange_hsv)
-    #     #cv2.imshow('src_img', img)
-    #     #cv2.waitKey(1)
-    #     break
     return video.get_img(0)
 
 def trim_image(x, y, im):
@@ -183,12 +177,15 @@ def ford_46(dexarm):
 
 if __name__ == "__main__":
     print("Ready to go")
+    # dexarm.go_home()
     dexarm.fast_move_to(0, 340, 150)
     video.open(0,320,240)
     previous = "Black"
     start = 0
     dexarm.conveyor_belt_forward(8300)
     while True:
+        # dexarm.conveyor_belt_stop()
+        # break
         img = video.get_img(0)[:,:,::-1]
         img = trim_image(320, 240, img)
         av_pixel = get_av_pixel(img)
