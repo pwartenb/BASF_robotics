@@ -164,15 +164,20 @@ def get_av_pixel(im):
             total += av
     return total/total_num
 
-def ford_46(dexarm):
-    current = (0, 340, 150)
-    dexarm.fast_move_to(41, 309, 30)
-    dexarm.fast_move_to(-20, 320, 30)
-    dexarm.fast_move_to(-20, 330, 30)
-    dexarm.fast_move_to(-20, 340, 30)
-    dexarm.fast_move_to(-20, 350, 30)
-    dexarm.fast_move_to(-20, 360, 30)
-    dexarm.fast_move_to(41, 371, 30)
+def take_sample(dexarm, loc):
+    above_loc = (loc[0], loc[1], loc[2] + 30)
+    dexarm.fast_move_to(*above_loc)
+    dexarm.fast_move_to(*loc)
+    dexarm.fast_move_to(*above_loc)
+
+def ford_46(dexarm, loc):
+    take_sample(dexarm, (41, 309, 30))
+    take_sample(dexarm, (-20, 320, 30))
+    take_sample(dexarm, (-20, 330, 30))
+    take_sample(dexarm, (-20, 340, 30))
+    take_sample(dexarm, (-20, 350, 30))
+    take_sample(dexarm, (-20, 360, 30))
+    take_sample(dexarm, (41, 371, 30))
     dexarm.fast_move_to(0, 340, 150)
 
 if __name__ == "__main__":

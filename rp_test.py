@@ -1,15 +1,37 @@
-import time
-import RPi.GPIO as GPIO
+#from pitop import Pitop
+from pitop import miniscreen
+from time import sleep
 
-GPIO.setwarnings(False) # Ignore warning for now
-GPIO.setmode(GPIO.BCM) # Use physical pin numbering
+ms = miniscreen
+print(ms)
+m = ms.Miniscreen()
+print(m)
 
-switch1 = 5
-switch2 = 6
-# switch3 = 20
-# switch4 = 21
+up = miniscreen.UpButton
 
-GPIO.setup(switch1, GPIO.IN)
-GPIO.setup(switch2, GPIO.IN)
-# GPIO.setup(switch3, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-# GPIO.setup(switch4, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+down = miniscreen.DownButton
+
+select = miniscreen.SelectButton
+
+cancel = miniscreen.CancelButton
+# define (def) actions for each of the buttons
+
+def up_action():
+    print ("UP is pressed")
+
+def down_action():
+    print ("DOWN is pressed")
+
+def select_action():
+    print ("SELECT is pressed")
+
+def cancel_action():
+    print ("CANCEL is pressed")
+
+# Now, the algorithm
+while True:
+    up.when_pressed = up_action
+    down.when_pressed = down_action
+    select.when_pressed = select_action
+    cancel.when_pressed = cancel_action
+#sleep(5)
