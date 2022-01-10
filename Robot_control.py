@@ -5,26 +5,11 @@ from matplotlib import pyplot as plt
 from Cam_dev import *
 from pydexarm import Dexarm
 import time
-import RPi.GPIO as GPIO
-
-GPIO.setwarnings(False) # Ignore warning for now
-GPIO.setmode(GPIO.BCM) # Use physical pin numbering
-
-switch1 = 5
-switch2 = 6
-# switch3 = 20
-# switch4 = 21
-
-GPIO.setup(switch1, GPIO.IN)
-GPIO.setup(switch2, GPIO.IN)
-# GPIO.setup(switch3, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-# GPIO.setup(switch4, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-
 
 '''windows'''
 #dexarm = Dexarm(port="COM67")
 '''mac & linux'''
-dexarm = Dexarm(port="/dev/ttyACM0")
+dexarm = Dexarm(port="/dev/ttyACM0") # initializes dexarm to correct port
 
 tar_color = 'green'
 color_dict = {'red': {'Lower': np.array([127, 60, 171]), 'Upper': np.array([188, 197, 255])},
@@ -213,6 +198,8 @@ if __name__ == "__main__":
         # dexarm.conveyor_belt_stop()
         # break
         img = video.get_img(0)[:,:,::-1]
+        plt.imshow(img)
+        plt.show()
         img = trim_image(320, 240, img)
         av_pixel = get_av_pixel(img)
         if av_pixel < 185:

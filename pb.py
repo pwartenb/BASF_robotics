@@ -124,6 +124,10 @@ deck.shuffle()
 
 hole_cards = [deck[0], deck[1]]
 flop = [deck[2], deck[3], deck[4], deck[5], deck[6]]
+swap = [deck[7], deck[8]]
 
 print(hole_cards, flop)
 print(post_flop_mc(hole_cards, flop, [], 5000))
+
+print(hole_cards, flop, swap)
+print(post_flop_mc(hole_cards, flop, swap, 5000))
