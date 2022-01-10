@@ -16,9 +16,8 @@ def do_mc():
     all_possible = get_all_hands(deck)
     random.shuffle(all_possible)
     for hand in all_possible:
-        hole_cards = hand
-        print(hole_cards)
-        for card in hole_cards: #removing our hole cards from the deck
+        print(hand)
+        for card in hand: #removing our hole cards from the deck
                 deck.cards.remove(card)
 
         iters = 5000
@@ -26,8 +25,10 @@ def do_mc():
         wins = 0
         ties = 0
         score = 0
+        changes = 0
 
         for _ in range(iters): # MC the probability of winning
+            hole_cards = hand[:]
             deck.shuffle()
 
             _OPP = 2 
@@ -37,6 +38,20 @@ def do_mc():
 
             opp_hole = draw[:_OPP]
             community = draw[_OPP:]
+
+            change = 0
+            for i in range(2):
+                if random.random() <= .10:
+                    change += 1
+                    hole_cards[i] = deck.peek(7+change)[6+change]
+
+            for i in range(2):
+                if random.random() <= .050:
+                    change += 1
+                    hole_cards[i] = deck.peek(7+change)[6+change]
+
+            if hole_cards != hand:
+                changes += 1
 
             our_hand = hole_cards + community
             opp_hand = opp_hole + community
@@ -54,9 +69,10 @@ def do_mc():
 
         hand_strength = score/(2*iters) # win probability 
 
-        odds_dict[tuple(hole_cards)] = (wins/iters, ties/iters, hand_strength)
+        odds_dict[tuple(hand)] = (wins/iters, ties/iters, hand_strength)
         break
 
+    print(changes/iters, changes)
     return odds_dict
 
 
