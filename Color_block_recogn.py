@@ -143,7 +143,12 @@ def recogn_main():
     revogn = Color_block_recogn(red_hsv,feature_param,rgb_param)
     return video.get_img(0)
 
-def trim_image(x, y, im):
+def trim_image(im):
+    '''
+    takes in image and trims to only view conveyor
+    belt that is directly under the camera allows 
+    for more accurate sensing of panel
+    '''
     list_im = list(im)
     x_start = 75
     x_end = 200
@@ -156,6 +161,11 @@ def trim_image(x, y, im):
     return np.array(final_im)
 
 def get_av_pixel(im):
+    '''
+    Given spliced image returns average pixel allows
+    for more accurate accounting for color change when 
+    panel passes underneath the camera
+    '''
     total_num = len(im)*len(im[0])
     total = 0
     for row in im:
@@ -165,20 +175,31 @@ def get_av_pixel(im):
     return total/total_num
 
 def take_sample(dexarm, loc):
+    '''
+    Takes in dexarm instance and specified 
+    location return nothing
+    Moves to above location and then drops 
+    to accurately take sample
+    '''
     above_loc = (loc[0], loc[1], loc[2] + 30)
     dexarm.fast_move_to(*above_loc)
     dexarm.fast_move_to(*loc)
     dexarm.fast_move_to(*above_loc)
 
-def ford_46(dexarm, loc):
-    take_sample(dexarm, (41, 309, 30))
+def ford_46(dexarm):
+    '''
+    Only input is dexarm instance returns nothing
+    Takes film thickness measurements at all 7
+    required spots for 4x6 Ford panel
+    '''
+    take_sample(dexarm, (41, 309, 30)) # calls take sample with specified location
     take_sample(dexarm, (-20, 320, 30))
     take_sample(dexarm, (-20, 330, 30))
     take_sample(dexarm, (-20, 340, 30))
     take_sample(dexarm, (-20, 350, 30))
     take_sample(dexarm, (-20, 360, 30))
     take_sample(dexarm, (41, 371, 30))
-    dexarm.fast_move_to(0, 340, 150)
+    dexarm.fast_move_to(0, 340, 150) # return to starting position
 
 if __name__ == "__main__":
     print("Ready to go")

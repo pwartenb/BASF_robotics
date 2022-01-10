@@ -1,3 +1,7 @@
+'''
+Test file for using built in buttons
+on the raspberry pi
+'''
 from pitop import Pitop
 from time import sleep
 

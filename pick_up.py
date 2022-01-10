@@ -4,6 +4,11 @@ import time
 dexarm = Dexarm(port="/dev/ttyACM0")
 
 def go_get(current, obj_loc):
+    '''
+    Given current location and locatoin of an obj
+    Uses vaccum pump attachment to retrieve object 
+    and bring it to current location
+    '''
     above_current = (current[0], current[1], 150)
     above_obj = (obj_loc[0], obj_loc[1], 150)
     dexarm.set_module_type(2)
