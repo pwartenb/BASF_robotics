@@ -26,21 +26,27 @@ def red_marks(dexarm):
     dexarm.fast_move_to(65, 315, 0)
     dexarm.go_home()
 
-#dexarm.soft_gripper_nature()
-dexarm.set_module_type(2)
-#dexarm.go_home()
-# dexarm.fast_move_to(340, 0, 150)
+# #dexarm.soft_gripper_nature()
+# dexarm.set_module_type(2)
+# #dexarm.go_home()
+# # dexarm.fast_move_to(340, 0, 150)
+# # dexarm.fast_move_to(0, 340, 150)
 # dexarm.fast_move_to(0, 340, 150)
-dexarm.fast_move_to(0, 340, 150)
-dexarm.fast_move_to(0, 270, 150)
-dexarm.fast_move_to(0, 270, 30)
-dexarm.soft_gripper_place()
-dexarm.fast_move_to(340, 0, 150)
-time.sleep(7)
-dexarm.fast_move_to(0, 270, 150)
-dexarm.fast_move_to(0, 270, 30)
-time.sleep(2)
-dexarm.soft_gripper_nature()
+# dexarm.fast_move_to(0, 270, 150)
+# dexarm.fast_move_to(0, 270, 30)
+# dexarm.soft_gripper_place()
+# dexarm.fast_move_to(340, 0, 150)
+# time.sleep(7)
+# dexarm.fast_move_to(0, 270, 150)
+# dexarm.fast_move_to(0, 270, 30)
+# time.sleep(2)
+# dexarm.soft_gripper_nature()
+
+
+dexarm.go_home()
+print(dexarm.get_current_position())
+dexarm.fast_move_to(50,0,50)
+
 
 '''DexArm sliding rail Demo'''
 

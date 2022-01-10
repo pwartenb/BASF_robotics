@@ -4,6 +4,7 @@ import math
 from matplotlib import pyplot as plt
 from Cam_dev import *
 from pydexarm import Dexarm
+from pick_up import *
 import time
 
 '''windows'''
@@ -186,17 +187,17 @@ def ford_46(dexarm):
     take_sample(dexarm, (41, 371, 30))
     dexarm.fast_move_to(0, 340, 150) # return to starting position
 
-if __name__ == "__main__":
-    print("Ready to go")
-    # dexarm.go_home()
-    dexarm.fast_move_to(0, 340, 150)
+def find_length(dexarm, move_start):
+    '''
+    Takes in Dexarm instance and time that panel began to move.
+    Calculates length of panel and chooses corresponding test program
+    then returns panel to mosition under vacuum pump so it can be
+    placed on the done pile. Returns nothing.
+    '''
     video.open(0,320,240)
     previous = "Black"
     start = 0
-    dexarm.conveyor_belt_forward(8300)
     while True:
-        # dexarm.conveyor_belt_stop()
-        # break
         img = video.get_img(0)[:,:,::-1]
         plt.imshow(img)
         plt.show()
@@ -216,19 +217,38 @@ if __name__ == "__main__":
                     ford_46(dexarm)
                     dexarm.dealy_s(2)
                 dexarm.conveyor_belt_forward(8300)
-                previous = "Black"
-                img = video.get_img(0)[:,:,::-1]
-                img = trim_image(320, 240, img)
-                av_pixel = get_av_pixel(img)
-                while av_pixel > 180:
-                    img = video.get_img(0)[:,:,::-1]
-                    img = trim_image(320, 240, img)
-                    av_pixel = get_av_pixel(img)
+                time.sleep(move_back - move_start)
+                dexarm.conveyor_belt_stop()
+                break
         else:
             if previous == "Black":
                 previous = "White"
+                move_back = time.perf_counter()
                 start = time.perf_counter()
         if av_pixel < 35:
             dexarm.conveyor_belt_stop()
             break
+
+def run_test(dexarm, dexarm_2):
+    '''
+    Takes in two dexarm objects. One should have probe attached other
+    has vacuum pump. Moves panels to conveyor belt and then
+    calls function to find length and engage probe 
+    '''
+    dexarm.fast_move_to(0, 340, 150)
+    dexarm_2.fast_move_to(0, -340, 150)
+    pile_loc = (x,y,z)
+    current = dexarm_2.get_current_position()
+    move_sample(current[:3], pile_loc, dexarm_2)
+    dexarm.conveyor_belt_forward(8300)
+    move_start = time.perf_counter()
+    find_length(dexarm, move_start)
+
+if __name__ == "__main__":
+    print("Ready to go")
+    dexarm.go_home()
+    dexarm_2.go_home()
+    num_panels = int(input('How many panels?'))
+    for i in range(num_panels):
+        run_test(dexarm, dexarm_2)
     pass
