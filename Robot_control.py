@@ -187,7 +187,22 @@ def ford_46(dexarm):
     take_sample(dexarm, (41, 371, 30))
     dexarm.fast_move_to(0, 340, 150) # return to starting position
 
-def find_length(dexarm, move_start):
+def align_panel(elapsed, dexarm, func):
+    '''
+    Takes in time elapsed from panel passing through camera,
+    a dexarm instance, and func that correlates to panel test.
+    Function moves panel so samples can be taken accurately
+    '''
+    dexarm.conveyor_belt_backward(8300)
+    time.sleep(elapsed*.8)
+    dexarm.conveyor_belt_stop()
+    func(dexarm)
+    dexarm.dealy_s(2)
+    dexarm.conveyor_belt_backward(8300)
+    time.sleep(4.6)
+    dexarm.conveyor_belt_stop()
+
+def find_length(dexarm):
     '''
     Takes in Dexarm instance and time that panel began to move.
     Calculates length of panel and chooses corresponding test program
@@ -199,9 +214,9 @@ def find_length(dexarm, move_start):
     start = 0
     while True:
         img = video.get_img(0)[:,:,::-1]
-        plt.imshow(img)
-        plt.show()
-        img = trim_image(320, 240, img)
+        # plt.imshow(img)
+        # plt.show()
+        img = trim_image(img)
         av_pixel = get_av_pixel(img)
         if av_pixel < 185:
             if previous == "White":
@@ -211,44 +226,50 @@ def find_length(dexarm, move_start):
                 print("Len of panel: ", (dist/25.4), " inches")
                 length = dist/25.4
                 if 5.5 < length < 6.5:
-                    dexarm.conveyor_belt_backward(8300)
-                    time.sleep(elapsed*.8)
-                    dexarm.conveyor_belt_stop()
-                    ford_46(dexarm)
-                    dexarm.dealy_s(2)
-                dexarm.conveyor_belt_forward(8300)
-                time.sleep(move_back - move_start)
-                dexarm.conveyor_belt_stop()
-                break
+                    align_panel(elapsed, dexarm, ford_46)
+                    video.close()
+                    break
+                else:
+                    previous = "Black"
+                    img = video.get_img(0)[:,:,::-1]
+                    img = trim_image(img)
+                    av_pixel = get_av_pixel(img)
+                    while av_pixel > 180:
+                        img = video.get_img(0)[:,:,::-1]
+                        img = trim_image(img)
+                        av_pixel = get_av_pixel(img)
         else:
             if previous == "Black":
                 previous = "White"
-                move_back = time.perf_counter()
                 start = time.perf_counter()
         if av_pixel < 35:
             dexarm.conveyor_belt_stop()
+            video.close()
             break
+    video.close()
 
-def run_test(dexarm, dexarm_2):
+def run_test(dexarm, dexarm_2 = 0, pile_loc = 0):
     '''
     Takes in two dexarm objects. One should have probe attached other
     has vacuum pump. Moves panels to conveyor belt and then
     calls function to find length and engage probe 
     '''
     dexarm.fast_move_to(0, 340, 150)
-    dexarm_2.fast_move_to(0, -340, 150)
-    pile_loc = (x,y,z)
-    current = dexarm_2.get_current_position()
-    move_sample(current[:3], pile_loc, dexarm_2)
+    # dexarm_2.fast_move_to(0, -340, 150)
+    # current = dexarm_2.get_current_position()
+    # move_sample(current[:3], pile_loc, dexarm_2)
     dexarm.conveyor_belt_forward(8300)
-    move_start = time.perf_counter()
-    find_length(dexarm, move_start)
+    find_length(dexarm)
 
 if __name__ == "__main__":
+    dexarm.conveyor_belt_stop()
     print("Ready to go")
-    dexarm.go_home()
-    dexarm_2.go_home()
+    #dexarm.go_home()
+    dexarm.fast_move_to(0, 340, 150)
+    #dexarm_2.go_home()
+    #pile_loc = (x,y,z)
     num_panels = int(input('How many panels?'))
     for i in range(num_panels):
-        run_test(dexarm, dexarm_2)
+        #run_test(dexarm, dexarm_2, pile_loc)
+        run_test(dexarm)
     pass
