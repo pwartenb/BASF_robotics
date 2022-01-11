@@ -257,19 +257,20 @@ def run_test(dexarm, dexarm_2 = 0, pile_loc = 0):
     dexarm.fast_move_to(0, 340, 150)
     # dexarm_2.fast_move_to(0, -340, 150)
     # current = dexarm_2.get_current_position()
-    # move_sample(current[:3], pile_loc, dexarm_2)
-    dexarm.conveyor_belt_forward(8300)
-    find_length(dexarm)
+    current = 0, 250, 30
+    move_sample(current, pile_loc, dexarm)
+    # dexarm.conveyor_belt_forward(8300)
+    # find_length(dexarm)
 
 if __name__ == "__main__":
-    dexarm.conveyor_belt_stop()
+    #dexarm.conveyor_belt_stop()
     print("Ready to go")
-    #dexarm.go_home()
+    dexarm.go_home()
     dexarm.fast_move_to(0, 340, 150)
     #dexarm_2.go_home()
-    #pile_loc = (x,y,z)
+    pile_loc = (-360, 0, 15)
     num_panels = int(input('How many panels?'))
     for i in range(num_panels):
         #run_test(dexarm, dexarm_2, pile_loc)
-        run_test(dexarm)
+        run_test(dexarm, 0, pile_loc)
     pass
