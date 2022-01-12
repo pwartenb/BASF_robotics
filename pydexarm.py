@@ -39,7 +39,7 @@ class Dexarm:
                         print("read ok")
                         break
                     else:
-                        print("read：", serial_str)
+                        print("read:", serial_str)
             except:
                 print('no val')
 
