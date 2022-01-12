@@ -91,7 +91,7 @@ class CNC:
 cnc = CNC(port="/dev/ttyACM0")
 
 if __name__ == "__main__":
-    with open('CNC_G_Code/GeneralVerticalv1.txt') as f:
+    with open('CNC_G_Code/test.txt') as f:
         lines = f.readlines()
 
     commands = []
@@ -99,15 +99,19 @@ if __name__ == "__main__":
     for item in lines:
         commands.append(item.strip())
 
+    for cmd in commands:
+        cnc._send_cmd(cmd)
+
     while True:
         pos = cnc.get_current_position()
         print(pos)
         x_pos = int(pos[0])
         y_pos = int(pos[1])
         z_pos = int(pos[2])
-        delta_z = int(input("Change Z by how much?"))
+        delta_z = float(input("Change Z by how much?"))
+        if delta_z == 0:
+            cnc._send_cmd("M30")
+            cnc._send_cmd("%")
+            break
         cnc.move_to(x_pos, y_pos, z_pos + delta_z)
 
-
-    # for cmd in commands:
-    #     cnc._send_cmd(cmd)
