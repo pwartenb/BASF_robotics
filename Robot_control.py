@@ -6,10 +6,13 @@ from Cam_dev import *
 from pydexarm import Dexarm
 from pick_up import *
 import time
+import csv
+import pickle
 
 '''windows'''
 #dexarm = Dexarm(port="COM67")
 '''mac & linux'''
+loaded_model = pickle.load(open('knnpickle_file', 'rb'))
 dexarm = Dexarm(port="/dev/ttyACM0") # initializes dexarm to correct port
 
 tar_color = 'green'
@@ -123,11 +126,14 @@ class Color_block_recogn():
     
     pass
 
-
-def recogn_main():
-    video.open(0,320,240)
-    revogn = Color_block_recogn(red_hsv,feature_param,rgb_param)
-    return video.get_img(0)
+def get_pic():
+    video_capture = cv2.VideoCapture(0)
+    if not video_capture.isOpened():
+        raise Exception("Could not open video device")
+    ret, frame = video_capture.read()
+    video_capture.release()
+    im = trim_image(frame[:,:,::-1])
+    return im
 
 def trim_image(im):
     '''
@@ -136,10 +142,10 @@ def trim_image(im):
     for more accurate sensing of panel
     '''
     list_im = list(im)
-    x_start = 75
-    x_end = 200
-    y_start = 140
-    y_end = 180
+    x_start = 185
+    x_end = 330
+    y_start = 270
+    y_end = 370
     new_im = list_im[x_start: x_end+1]
     final_im = []
     for item in new_im:
@@ -153,11 +159,10 @@ def get_av_pixel(im):
     panel passes underneath the camera
     '''
     total_num = len(im)*len(im[0])
-    total = 0
+    total = (0, 0, 0)
     for row in im:
         for item in row:
-            av = sum(item)/3
-            total += av
+            total += item
     return total/total_num
 
 def take_sample(dexarm, loc):
@@ -209,16 +214,19 @@ def find_length(dexarm):
     then returns panel to mosition under vacuum pump so it can be
     placed on the done pile. Returns nothing.
     '''
-    video.open(0,320,240)
     previous = "Black"
     start = 0
+    cont = [True, True, True]
+    current = [None, None, None]
     while True:
-        img = video.get_img(0)[:,:,::-1]
+        im = get_pic()
+        av_pixel = get_av_pixel(im)
         # plt.imshow(img)
         # plt.show()
-        img = trim_image(img)
-        av_pixel = get_av_pixel(img)
-        if av_pixel < 185:
+        new = is_pink(av_pixel)
+        current.pop(0)
+        current.append(new)
+        if current == cont:
             if previous == "White":
                 end = time.perf_counter()
                 elapsed = end - start
@@ -227,22 +235,25 @@ def find_length(dexarm):
                 length = dist/25.4
                 if 5.5 < length < 6.5:
                     align_panel(elapsed, dexarm, ford_46)
-                    video.close()
                     break
                 else:
                     previous = "Black"
-                    img = video.get_img(0)[:,:,::-1]
-                    img = trim_image(img)
-                    av_pixel = get_av_pixel(img)
-                    while av_pixel > 180:
-                        img = video.get_img(0)[:,:,::-1]
-                        img = trim_image(img)
-                        av_pixel = get_av_pixel(img)
+                    im = get_pic()
+                    av_pixel = get_av_pixel(im)
+                    new = is_pink(av_pixel)
+                    current.pop(0)
+                    current.append(new)
+                    while current != cont:
+                        im = get_pic()
+                        av_pixel = get_av_pixel(im)
+                        new = is_pink(av_pixel)
+                        current.pop(0)
+                        current.append(new)
         else:
             if previous == "Black":
                 previous = "White"
                 start = time.perf_counter()
-        if av_pixel < 35:
+        if av_pixel[0] < 35:
             dexarm.conveyor_belt_stop()
             video.close()
             break
@@ -254,23 +265,45 @@ def run_test(dexarm, dexarm_2 = 0, pile_loc = 0):
     has vacuum pump. Moves panels to conveyor belt and then
     calls function to find length and engage probe 
     '''
-    dexarm.fast_move_to(0, 340, 150)
+    dexarm.fast_move_to(0, 330, 150)
     # dexarm_2.fast_move_to(0, -340, 150)
     # current = dexarm_2.get_current_position()
-    current = 0, 250, 30
-    move_sample(current, pile_loc, dexarm)
-    # dexarm.conveyor_belt_forward(8300)
-    # find_length(dexarm)
+    # current = 0, 250, 30
+    # move_sample(current, pile_loc, dexarm)
+    dexarm.conveyor_belt_forward(8300)
+    find_length(dexarm)
+
+def is_pink(av_pixel):
+    rm, rs = 196.57665278949534, 28.951220571289785
+    gm, gs = 130.9320091400828, 55.78273668632098
+    bm, bs = 168.40080964214368, 23.53549606756639
+    new_pixel = np.array([(av_pixel[0] - rm)/rs, (av_pixel[1] - gm)/gs, (av_pixel[2] - bm)/bs])
+    result = loaded_model.predict(new_pixel.reshape(1, -1)) 
+    print(result)
+    if result == 'Pink':
+        return True
+    return False
 
 if __name__ == "__main__":
-    #dexarm.conveyor_belt_stop()
+    dexarm.conveyor_belt_stop()
     print("Ready to go")
     dexarm.go_home()
-    dexarm.fast_move_to(0, 340, 150)
-    #dexarm_2.go_home()
-    pile_loc = (-360, 0, 15)
+    dexarm.fast_move_to(0, 330, 150)
+    # #dexarm_2.go_home()
+    # pile_loc = (-360, 0, 15)
     num_panels = int(input('How many panels?'))
     for i in range(num_panels):
+        dexarm.conveyor_belt_forward(8300)
+        im = get_pic()
+        av_pixel = get_av_pixel(im)
+        while True: 
+            # s = time.perf_counter()
+            # im = get_pic()
+            # av_pixel = get_av_pixel(im)
+            # print(is_pink(av_pixel))
+            run_test(dexarm)
+    dexarm.conveyor_belt_stop()
         #run_test(dexarm, dexarm_2, pile_loc)
-        run_test(dexarm, 0, pile_loc)
-    pass
+        #run_test(dexarm)
+    # pass
+    #dexarm.go_home()
