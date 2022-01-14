@@ -19,8 +19,8 @@ def trim_image(im):
     for more accurate sensing of panel
     '''
     list_im = list(im)
-    x_start = 185
-    x_end = 330
+    x_start = 198
+    x_end = 380
     y_start = 270
     y_end = 370
     new_im = list_im[x_start: x_end+1]
@@ -69,22 +69,22 @@ while current != 2:
         classify = "Not Pink"
     else:
         classify = "Pink"
-    s = time.perf_counter()
-    new_pixel = np.array([(av_pixel[0] - rm)/rs, (av_pixel[1] - gm)/gs, (av_pixel[2] - bm)/bs])
-    result = loaded_model.predict(new_pixel.reshape(1, -1)) 
-    end = time.perf_counter()
-    print(end - s)
-    print(result)
-    #rows.append({'Pixels': list(av_pixel), 'Classification': classify})
+    # s = time.perf_counter()
+    # new_pixel = np.array([(av_pixel[0] - rm)/rs, (av_pixel[1] - gm)/gs, (av_pixel[2] - bm)/bs])
+    # result = loaded_model.predict(new_pixel.reshape(1, -1)) 
+    # end = time.perf_counter()
+    # print(end - s)
+    # print(result)
+    rows.append({'Pixels': list(av_pixel), 'Classification': classify})
     im = get_pic()
     av_pixel = get_av_pixel(im)
     plt.imshow(im)
     plt.show()
     current = int(input("0 for not pink, 1 for pink"))
 
-# filename = 'training_data.csv'
-# fields = ['Pixels', 'Classification']
-# with open(filename, 'a') as csvfile:
-#     writer = csv.DictWriter(csvfile, fieldnames = fields) 
-#     writer.writeheader()
-#     writer.writerows(rows)
+filename = 'training_data.csv'
+fields = ['Pixels', 'Classification']
+with open(filename, 'a') as csvfile:
+    writer = csv.DictWriter(csvfile, fieldnames = fields) 
+    #writer.writeheader()
+    writer.writerows(rows)
