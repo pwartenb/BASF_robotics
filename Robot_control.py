@@ -142,7 +142,7 @@ def trim_image(im):
     for more accurate sensing of panel
     '''
     list_im = list(im)
-    x_start = 93
+    x_start = 82
     x_end = 172
     y_start = 135
     y_end = 185
@@ -201,7 +201,7 @@ def align_panel(elapsed, dexarm, func):
     dexarm.conveyor_belt_backward(8300)
     time.sleep(elapsed*.8)
     dexarm.conveyor_belt_stop()
-    func(dexarm)
+    #func(dexarm)
     dexarm.dealy_s(2)
     dexarm.conveyor_belt_backward(8300)
     time.sleep(4.6)
@@ -290,21 +290,24 @@ if __name__ == "__main__":
     video.open(0,320,240)
     dexarm.conveyor_belt_stop()
     print("Ready to go")
-    #dexarm.go_home()
+    # dexarm.go_home()
     dexarm.fast_move_to(0, 330, 150)
     # #dexarm_2.go_home()
     # pile_loc = (-360, 0, 15)
     num_panels = int(input('How many panels?'))
     for i in range(num_panels):
-        # img = video.get_img(0)[:,:,::-1]
-        # img = trim_image(img)
-        # av_pixel = get_av_pixel(img)
         dexarm.conveyor_belt_forward(8300)
+        #while True:
+            # img = video.get_img(0)[:,:,::-1]
+            # img = trim_image(img)
+            # av_pixel = get_av_pixel(img)
+            # print(is_pink(av_pixel))
+        #dexarm.conveyor_belt_forward(8300)
         # while True: 
             # s = time.perf_counter()
             # img = video.get_img(0)[:,:,::-1]
             # img = trim_image(img)
-            # av_pixel = get_av_pixel(img)
+            # av_pixel = gdexarm.conveyor_belt_forward(8300)et_av_pixel(img)
             # print(is_pink(av_pixel))
             # print(time.perf_counter() - s)
             # plt.imshow(img)
