@@ -277,9 +277,9 @@ def run_test(dexarm, dexarm_2 = 0, pile_loc = 0):
     find_length(dexarm)
 
 def is_pink(av_pixel):
-    rm, rs = 174.96290055726192, 67.30341317065115
-    gm, gs = 110.69269167840156, 52.42972332223492
-    bm, bs = 145.3696489536628, 49.51475932266865
+    rm, rs = 188.3378184797758, 65.11833826181713
+    gm, gs = 120.33748490909115, 53.352200935211435
+    bm, bs = 155.1103771075327, 47.97257529192781
     new_pixel = np.array([(av_pixel[0] - rm)/rs, (av_pixel[1] - gm)/gs, (av_pixel[2] - bm)/bs])
     result = loaded_model.predict(new_pixel.reshape(1, -1)) 
     if result == 'Pink':
@@ -290,7 +290,7 @@ if __name__ == "__main__":
     video.open(0,320,240)
     dexarm.conveyor_belt_stop()
     print("Ready to go")
-    dexarm.go_home()
+    # dexarm.go_home()
     dexarm.fast_move_to(0, 330, 150)
     # #dexarm_2.go_home()
     # pile_loc = (-360, 0, 15)
@@ -307,7 +307,7 @@ if __name__ == "__main__":
             # s = time.perf_counter()
             # img = video.get_img(0)[:,:,::-1]
             # img = trim_image(img)
-            # av_pixel = gdexarm.conveyor_belt_forward(8300)et_av_pixel(img)
+            # av_pixel = get_av_pixel(img)
             # print(is_pink(av_pixel))
             # print(time.perf_counter() - s)
             # plt.imshow(img)

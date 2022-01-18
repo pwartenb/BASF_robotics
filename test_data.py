@@ -51,11 +51,11 @@ def get_pic():
     im = trim_image(frame[:,:,::-1])
     return im
 
-rm, rs = 196.57665278949534, 28.951220571289785
-gm, gs = 130.9320091400828, 55.78273668632098
-bm, bs = 168.40080964214368, 23.53549606756639
+rm, rs = 188.3378184797758, 65.11833826181713
+gm, gs = 120.33748490909115, 53.352200935211435
+bm, bs = 155.1103771075327, 47.97257529192781
 
-loaded_model = pickle.load(open('knnpickle_file', 'rb'))
+loaded_model = pickle.load(open('knnpickle_file_3', 'rb'))
 im = get_pic()
 av_pixel = get_av_pixel(im)
 print(av_pixel)
@@ -65,26 +65,29 @@ current = int(input("0 for not pink, 1 for pink"))
 rows = []
 classify = ""
 while current != 2:
+    # dexarm.conveyor_belt_forward(8300)
+    # time.sleep(1.5)
+    # dexarm.conveyor_belt_stop()
     if current == 0:
         classify = "Not Pink"
     else:
         classify = "Pink"
     # s = time.perf_counter()
-    # new_pixel = np.array([(av_pixel[0] - rm)/rs, (av_pixel[1] - gm)/gs, (av_pixel[2] - bm)/bs])
-    # result = loaded_model.predict(new_pixel.reshape(1, -1)) 
+    new_pixel = np.array([(av_pixel[0] - rm)/rs, (av_pixel[1] - gm)/gs, (av_pixel[2] - bm)/bs])
+    result = loaded_model.predict(new_pixel.reshape(1, -1)) 
     # end = time.perf_counter()
     # print(end - s)
-    # print(result)
-    rows.append({'Pixels': list(av_pixel), 'Classification': classify})
+    print(result)
+    # rows.append({'Pixels': list(av_pixel), 'Classification': classify})
     im = get_pic()
     av_pixel = get_av_pixel(im)
     plt.imshow(im)
     plt.show()
-    current = int(input("0 for not pink, 1 for pink"))
+    # current = int(input("0 for not pink, 1 for pink"))
 
-filename = 'training_data.csv'
-fields = ['Pixels', 'Classification']
-with open(filename, 'a') as csvfile:
-    writer = csv.DictWriter(csvfile, fieldnames = fields) 
-    #writer.writeheader()
-    writer.writerows(rows)
+# filename = 'training_data.csv'
+# fields = ['Pixels', 'Classification']
+# with open(filename, 'a') as csvfile:
+#     writer = csv.DictWriter(csvfile, fieldnames = fields) 
+#     #writer.writeheader()
+#     writer.writerows(rows)
