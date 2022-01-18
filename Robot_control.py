@@ -12,7 +12,7 @@ import pickle
 '''windows'''
 #dexarm = Dexarm(port="COM67")
 '''mac & linux'''
-loaded_model = pickle.load(open('knnpickle_file', 'rb'))
+loaded_model = pickle.load(open('knnpickle_file_3', 'rb'))
 dexarm = Dexarm(port="/dev/ttyACM0") # initializes dexarm to correct port
 
 tar_color = 'green'
@@ -216,9 +216,9 @@ def find_length(dexarm):
     '''
     previous = "Black"
     start = 0
-    cont = [True, True]
-    discont = [False, False]
-    current = [None, None]
+    cont = [True]
+    discont = [False]
+    current = [None]
     while True:
         img = video.get_img(0)[:,:,::-1]
         img = trim_image(img)
@@ -277,9 +277,9 @@ def run_test(dexarm, dexarm_2 = 0, pile_loc = 0):
     find_length(dexarm)
 
 def is_pink(av_pixel):
-    rm, rs = 196.57665278949534, 28.951220571289785
-    gm, gs = 130.9320091400828, 55.78273668632098
-    bm, bs = 168.40080964214368, 23.53549606756639
+    rm, rs = 174.96290055726192, 67.30341317065115
+    gm, gs = 110.69269167840156, 52.42972332223492
+    bm, bs = 145.3696489536628, 49.51475932266865
     new_pixel = np.array([(av_pixel[0] - rm)/rs, (av_pixel[1] - gm)/gs, (av_pixel[2] - bm)/bs])
     result = loaded_model.predict(new_pixel.reshape(1, -1)) 
     if result == 'Pink':
@@ -290,7 +290,7 @@ if __name__ == "__main__":
     video.open(0,320,240)
     dexarm.conveyor_belt_stop()
     print("Ready to go")
-    # dexarm.go_home()
+    dexarm.go_home()
     dexarm.fast_move_to(0, 330, 150)
     # #dexarm_2.go_home()
     # pile_loc = (-360, 0, 15)
