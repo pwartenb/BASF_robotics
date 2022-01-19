@@ -20,8 +20,8 @@ def trim_image(im):
     for more accurate sensing of panel
     '''
     list_im = list(im)
-    x_start = 82
-    x_end = 172
+    x_start = 72
+    x_end = 162
     y_start = 135
     y_end = 185
     new_im = list_im[x_start: x_end+1]
@@ -52,20 +52,22 @@ def is_pink(av_pixel):
     return result
 
 video.open(0,320,240)
-dexarm.go_home()
-dexarm.fast_move_to(0, 330, 150)
+# dexarm.go_home()
+# dexarm.fast_move_to(0, 330, 150)
 img = video.get_img(0)[:,:,::-1]
 img = trim_image(img)
+plt.imshow(img)
+plt.show()
 av_pixel = get_av_pixel(img)
 new = is_pink(av_pixel)
 print(new)
 dexarm.conveyor_belt_forward(8300)
-while new != 'Pink':
-    img = video.get_img(0)[:,:,::-1]
-    img = trim_image(img)
-    av_pixel = get_av_pixel(img)
-    new = is_pink(av_pixel)
-    # print(new)
+# while new != 'Pink':
+#     img = video.get_img(0)[:,:,::-1]
+#     img = trim_image(img)
+#     av_pixel = get_av_pixel(img)
+#     new = is_pink(av_pixel)
+#     # print(new)
 
 dexarm.conveyor_belt_stop()
 video.close()
