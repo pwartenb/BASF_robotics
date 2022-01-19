@@ -183,14 +183,14 @@ def ford_46(dexarm):
     Takes film thickness measurements at all 7
     required spots for 4x6 Ford panel
     '''
-    take_sample(dexarm, (41, 309, 30)) # calls take sample with specified location
-    take_sample(dexarm, (-20, 320, 30))
-    take_sample(dexarm, (-20, 330, 30))
-    take_sample(dexarm, (-20, 340, 30))
-    take_sample(dexarm, (-20, 350, 30))
-    take_sample(dexarm, (-20, 360, 30))
-    take_sample(dexarm, (41, 371, 30))
-    dexarm.fast_move_to(0, 340, 150) # return to starting position
+    take_sample(dexarm, (41, 309 - 60, -35)) # calls take sample with specified location
+    take_sample(dexarm, (-20, 320 - 60, -33))
+    take_sample(dexarm, (-20, 330 - 60, -33))
+    take_sample(dexarm, (-20, 340 - 60, -33))
+    take_sample(dexarm, (-20, 350 - 60, -33))
+    take_sample(dexarm, (-20, 360 - 60, -33))
+    take_sample(dexarm, (41, 371 - 60, -35))
+    dexarm.fast_move_to(0, 330 - 50, 150) # return to starting position
 
 def align_panel(elapsed, dexarm, func):
     '''
@@ -199,9 +199,9 @@ def align_panel(elapsed, dexarm, func):
     Function moves panel so samples can be taken accurately
     '''
     dexarm.conveyor_belt_backward(8300)
-    time.sleep(elapsed*.8)
+    time.sleep(elapsed*.7)
     dexarm.conveyor_belt_stop()
-    #func(dexarm)
+    func(dexarm)
     dexarm.dealy_s(2)
     dexarm.conveyor_belt_backward(8300)
     time.sleep(4.6)
@@ -268,7 +268,7 @@ def run_test(dexarm, dexarm_2 = 0, pile_loc = 0):
     has vacuum pump. Moves panels to conveyor belt and then
     calls function to find length and engage probe 
     '''
-    dexarm.fast_move_to(0, 330, 150)
+    dexarm.fast_move_to(0, 330 - 50, 150)
     # dexarm_2.fast_move_to(0, -340, 150)
     # current = dexarm_2.get_current_position()
     # current = 0, 250, 30
@@ -291,7 +291,7 @@ if __name__ == "__main__":
     dexarm.conveyor_belt_stop()
     print("Ready to go")
     # dexarm.go_home()
-    dexarm.fast_move_to(0, 330, 150)
+    dexarm.fast_move_to(0, 330 - 50, 150)
     # #dexarm_2.go_home()
     # pile_loc = (-360, 0, 15)
     num_panels = int(input('How many panels?'))

@@ -52,18 +52,20 @@ def is_pink(av_pixel):
     return result
 
 video.open(0,320,240)
+dexarm.go_home()
+dexarm.fast_move_to(0, 330, 150)
 img = video.get_img(0)[:,:,::-1]
 img = trim_image(img)
 av_pixel = get_av_pixel(img)
 new = is_pink(av_pixel)
 print(new)
 dexarm.conveyor_belt_forward(8300)
-while new == 'Pink':
+while new != 'Pink':
     img = video.get_img(0)[:,:,::-1]
     img = trim_image(img)
     av_pixel = get_av_pixel(img)
     new = is_pink(av_pixel)
-    print(new)
+    # print(new)
 
 dexarm.conveyor_belt_stop()
 video.close()
