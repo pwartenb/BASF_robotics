@@ -10,18 +10,18 @@ from matplotlib import pyplot as plt
 '''windows'''
 #dexarm = Dexarm(port="COM67")
 '''mac & linux'''
-dexarm = Dexarm(port="/dev/ttyACM0")
+dexarm = Dexarm(port="/dev/ttyACM1")
 loaded_model = pickle.load(open('knnpickle_file_3', 'rb'))
 
-def trim_image(im):
+def trim_image(im): #415
     '''
     takes in image and trims to only view conveyor
     belt that is directly under the camera allows 
     for more accurate sensing of panel
     '''
     list_im = list(im)
-    x_start = 72
-    x_end = 162
+    x_start = 78
+    x_end = 168
     y_start = 135
     y_end = 185
     new_im = list_im[x_start: x_end+1]
@@ -56,18 +56,16 @@ video.open(0,320,240)
 # dexarm.fast_move_to(0, 330, 150)
 img = video.get_img(0)[:,:,::-1]
 img = trim_image(img)
-plt.imshow(img)
-plt.show()
 av_pixel = get_av_pixel(img)
 new = is_pink(av_pixel)
 print(new)
 dexarm.conveyor_belt_forward(8300)
-# while new != 'Pink':
-#     img = video.get_img(0)[:,:,::-1]
-#     img = trim_image(img)
-#     av_pixel = get_av_pixel(img)
-#     new = is_pink(av_pixel)
-#     # print(new)
+while new == 'Pink':
+    img = video.get_img(0)[:,:,::-1]
+    img = trim_image(img)
+    av_pixel = get_av_pixel(img)
+    new = is_pink(av_pixel)
+    # print(new)
 
 dexarm.conveyor_belt_stop()
 video.close()

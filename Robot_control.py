@@ -13,8 +13,8 @@ import pickle
 #dexarm = Dexarm(port="COM67")
 '''mac & linux'''
 loaded_model = pickle.load(open('knnpickle_file_3', 'rb'))
-dexarm = Dexarm(port="/dev/ttyACM0") # initializes dexarm to correct port
-dexarm_2 = Dexarm(port="/dev/ttyACM2")
+dexarm = Dexarm(port="/dev/ttyACM1") # initializes dexarm to correct port
+dexarm_2 = Dexarm(port="/dev/ttyACM0")
 
 tar_color = 'green'
 color_dict = {'red': {'Lower': np.array([127, 60, 171]), 'Upper': np.array([188, 197, 255])},
@@ -136,15 +136,15 @@ def get_pic():
     im = trim_image(frame[:,:,::-1])
     return im
 
-def trim_image(im):
+def trim_image(im): #415
     '''
     takes in image and trims to only view conveyor
     belt that is directly under the camera allows 
     for more accurate sensing of panel
     '''
     list_im = list(im)
-    x_start = 82
-    x_end = 172
+    x_start = 78
+    x_end = 168
     y_start = 135
     y_end = 185
     new_im = list_im[x_start: x_end+1]
@@ -199,68 +199,41 @@ def align_panel(elapsed, dexarm, func):
     a dexarm instance, and func that correlates to panel test.
     Function moves panel so samples can be taken accurately
     '''
-    dexarm_2.conveyor_belt_backward(8300)
-    time.sleep(elapsed*.60)
-    dexarm_2.conveyor_belt_stop()
+    dexarm.conveyor_belt_backward(8300)
+    time.sleep(elapsed*.65)
+    dexarm.conveyor_belt_stop()
     func(dexarm)
     dexarm.dealy_s(1)
-    dexarm_2.conveyor_belt_forward(8300)
+    dexarm.conveyor_belt_forward(8300)
     
 
-def find_length(dexarm):
+def find_length(dexarm, start):
     '''
     Takes in Dexarm instance and time that panel began to move.
     Calculates length of panel and chooses corresponding test program
     then returns panel to mosition under vacuum pump so it can be
     placed on the done pile. Returns nothing.
     '''
-    previous = "Black"
-    start = 0
-    cont = [True]
-    discont = [False]
-    current = [None]
     while True:
         img = video.get_img(0)[:,:,::-1]
         img = trim_image(img)
         av_pixel = get_av_pixel(img)
-        new = is_pink(av_pixel)
-        current.pop(0)
-        current.append(new)
-        if current == cont:
-            if previous == "White":
-                end = time.perf_counter()
-                elapsed = end - start
-                dist = elapsed*71.5
-                print("Len of panel: ", (dist/25.4), " inches")
-                length = dist/25.4
-                if 5.5 < length < 6.5:
-                    align_panel(elapsed, dexarm, ford_46)
-                    break
-                else:
-                    previous = "Black"
-                    img = video.get_img(0)[:,:,::-1]
-                    img = trim_image(img)
-                    av_pixel = get_av_pixel(img)
-                    new = is_pink(av_pixel)
-                    current.pop(0)
-                    current.append(new)
-                    while current == discont:
-                        img = video.get_img(0)[:,:,::-1]
-                        img = trim_image(img)
-                        av_pixel = get_av_pixel(img)
-                        new = is_pink(av_pixel)
-                        current.pop(0)
-                        current.append(new)
-                    if length > 5:
-                        break
-        else:
-            if previous == "Black":
-                previous = "White"
-                start = time.perf_counter()
-        if av_pixel[0] < 35:
-            dexarm_2.conveyor_belt_stop()
-            video.close()
+        print(is_pink(av_pixel))
+        if not is_pink(av_pixel):
+            end = time.perf_counter()
+            elapsed = end - start
+            dist = elapsed*71.5
+            print(dist)
+            length = (415 - dist)/25.4
+            print("Len of panel: ", length, " inches")
+            dexarm.conveyor_belt_stop()
+            time.sleep(3)
+            dexarm.conveyor_belt_forward(8300)
+            t = (length*28)/71.5
+            time.sleep(t)
+            dexarm.conveyor_belt_stop()
             break
+
 
 def run_test(dexarm, dexarm_2 = 0, pile_loc = 0):
     '''
@@ -270,9 +243,10 @@ def run_test(dexarm, dexarm_2 = 0, pile_loc = 0):
     '''
     dexarm.fast_move_to(0, 330 - 50, 150)
     current = dexarm_2.get_current_position()
-    move_sample(current[:3], pile_loc, dexarm_2)
-    dexarm_2.conveyor_belt_forward(8300)
-    find_length(dexarm)
+    #move_sample(current[:3], pile_loc, dexarm_2)
+    dexarm.conveyor_belt_forward(8300)
+    start = time.perf_counter()
+    find_length(dexarm, start)
 
 def is_pink(av_pixel):
     rm, rs = 188.3378184797758, 65.11833826181713
@@ -280,11 +254,11 @@ def is_pink(av_pixel):
     bm, bs = 155.1103771075327, 47.97257529192781
     new_pixel = np.array([(av_pixel[0] - rm)/rs, (av_pixel[1] - gm)/gs, (av_pixel[2] - bm)/bs])
     result = loaded_model.predict(new_pixel.reshape(1, -1)) 
-    if result == 'Pink':
-        return True
-    return False
+    return result == 'Pink'
+
 
 if __name__ == "__main__":
+    dexarm.conveyor_belt_stop()
     video.open(0,320,240)
     print("Ready to go")
     dexarm.fast_move_to(0, 280, 150)
@@ -294,4 +268,4 @@ if __name__ == "__main__":
     for i in range(num_panels):
         # run_test(dexarm)
         run_test(dexarm, dexarm_2, pile_loc)
-    dexarm_2.conveyor_belt_stop()
+    dexarm.conveyor_belt_stop()
