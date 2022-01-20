@@ -193,18 +193,19 @@ def ford_46(dexarm):
     take_sample(dexarm, (41, 371 - 60, -40))
     dexarm.fast_move_to(0, 330 - 50, 150) # return to starting position
 
-def align_panel(elapsed, dexarm, func):
+def align_panel(length, dexarm, func):
     '''
     Takes in time elapsed from panel passing through camera,
     a dexarm instance, and func that correlates to panel test.
     Function moves panel so samples can be taken accurately
     '''
-    dexarm.conveyor_belt_backward(8300)
-    time.sleep(elapsed*.65)
-    dexarm.conveyor_belt_stop()
-    func(dexarm)
-    dexarm.dealy_s(1)
+    t = (length*25.4)/(2*71.5)
     dexarm.conveyor_belt_forward(8300)
+    time.sleep(t)
+    dexarm.conveyor_belt_stop()
+    #func(dexarm)
+    dexarm.dealy_s(1)
+    dexarm.conveyor_belt_stop()
     
 
 def find_length(dexarm, start):
@@ -227,11 +228,12 @@ def find_length(dexarm, start):
             length = (415 - dist)/25.4
             print("Len of panel: ", length, " inches")
             dexarm.conveyor_belt_stop()
-            time.sleep(3)
-            dexarm.conveyor_belt_forward(8300)
-            t = (length*28)/71.5
-            time.sleep(t)
-            dexarm.conveyor_belt_stop()
+            align_panel(length, dexarm, ford_46)
+            # time.sleep(3)
+            # dexarm.conveyor_belt_forward(8300)
+            # t = (length*28)/71.5
+            # time.sleep(t)
+            # dexarm.conveyor_belt_stop()
             break
 
 
