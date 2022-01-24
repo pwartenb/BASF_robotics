@@ -6,11 +6,14 @@ import time
 import csv
 import pickle
 from matplotlib import pyplot as plt 
+from pick_up import *
+from panel_tests import *
+
 
 '''windows'''
 #dexarm = Dexarm(port="COM67")
 '''mac & linux'''
-dexarm = Dexarm(port="/dev/ttyACM1")
+dexarm = Dexarm(port="/dev/ttyACM2")
 loaded_model = pickle.load(open('knnpickle_file_3', 'rb'))
 
 def trim_image(im): #415
@@ -20,8 +23,8 @@ def trim_image(im): #415
     for more accurate sensing of panel
     '''
     list_im = list(im)
-    x_start = 78
-    x_end = 168
+    x_start = 58
+    x_end = 148
     y_start = 135
     y_end = 185
     new_im = list_im[x_start: x_end+1]
@@ -29,7 +32,6 @@ def trim_image(im): #415
     for item in new_im:
         final_im.append(item[y_start: y_end+1])
     return np.array(final_im)
-
 def get_av_pixel(im):
     '''
     Given spliced image returns average pixel allows
@@ -49,25 +51,19 @@ def is_pink(av_pixel):
     bm, bs = 155.1103771075327, 47.97257529192781
     new_pixel = np.array([(av_pixel[0] - rm)/rs, (av_pixel[1] - gm)/gs, (av_pixel[2] - bm)/bs])
     result = loaded_model.predict(new_pixel.reshape(1, -1)) 
-    return result
+    return result == 'Pink'
 
+dexarm.go_home()
+dexarm.fast_move_to(0, 280, 150)
+dexarm.conveyor_belt_stop()
+dexarm.conveyor_belt_forward(8300)
 video.open(0,320,240)
-# dexarm.go_home()
-# dexarm.fast_move_to(0, 330, 150)
-img = video.get_img(0)[:,:,::-1]
+img = video.get_img(1)[:,:,::-1]
 img = trim_image(img)
 av_pixel = get_av_pixel(img)
-new = is_pink(av_pixel)
-print(new)
-dexarm.conveyor_belt_forward(8300)
-while new == 'Pink':
-    img = video.get_img(0)[:,:,::-1]
+while is_pink(av_pixel):
+    img = video.get_img(1)[:,:,::-1]
     img = trim_image(img)
     av_pixel = get_av_pixel(img)
-    new = is_pink(av_pixel)
-    # print(new)
 
-dexarm.conveyor_belt_stop()
-video.close()
-plt.imshow(img)
-plt.show()
+horiz_412(dexarm)
