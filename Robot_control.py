@@ -15,7 +15,7 @@ import pickle
 '''mac & linux'''
 loaded_model = pickle.load(open('knnpickle_file_test', 'rb'))
 dexarm = Dexarm(port="/dev/ttyACM2") # initializes dexarm to correct port
-dexarm_2 = Dexarm(port="/dev/ttyACM3")
+dexarm_2 = Dexarm(port="/dev/ttyACM0")
 
 tar_color = 'green'
 color_dict = {'red': {'Lower': np.array([127, 60, 171]), 'Upper': np.array([188, 197, 255])},
@@ -240,16 +240,43 @@ def find_length(dexarm, test_type):
             break
     video.close()
 
-def run_test(dexarm, dexarm_2 = 0, pile_loc = 0, test_type = 0):
+def all_same(dexarm, test_type, size):
+    '''
+    Takes in Dexarm instance, type of test that is to be done, and panel size.
+    Adjusts panel and then performs test. This is only called when all 
+    panels are the same size. Returns nothing
+    '''
+    if size == 0:
+        time.sleep(3.6) # test time for 3x5
+        func = draw_35[test_type]
+        align_panel(dexarm, func)
+    elif size == 1:
+        time.sleep(3.2) # test time for 4x6
+        func = draw_46[test_type]
+        align_panel(dexarm, func)
+    elif size == 2:
+        time.sleep(2.5) # test time for 4x8
+        func = draw_48[test_type]
+        align_panel(dexarm, func)
+    elif size == 3:
+        time.sleep(1.1) # test time for 4x12
+        func = draw_412[test_type]
+        align_panel(dexarm, func)    
+    dexarm.conveyor_belt_forward(8300)
+
+def run_test(dexarm, dexarm_2 = 0, pile_loc = 0, test_type = 0, size = None):
     '''
     Takes in two dexarm objects. One should have probe attached other
     has vacuum pump. Moves panels to conveyor belt and then
     calls function to find length and engage probe 
     '''
     dexarm.fast_move_to(0, 330 - 50, 150)
-    current = dexarm_2.get_current_position()
+    current = [0, 280, 150]
     move_sample(current[:3], pile_loc, dexarm_2)
-    find_length(dexarm, test_type),
+    if size is not None:
+        all_same(dexarm, test_type, size)
+    find_length(dexarm, test_type)
+
 
 def is_pink(av_pixel):
     rm, rs = 188.3378184797758, 65.11833826181713
@@ -270,7 +297,12 @@ if __name__ == "__main__":
     pile_loc = (-255, 0, -110)
     num_panels = int(input('How many panels?'))
     test_type = int(input('Press 1 for cross pattern, 2 for vertical, 3 for angled, and 4 for horizontal'))
+    same_size = int(input('Press 1 if all panels same size, otherwise 0'))
+    if same_size == 1:
+        size = int(input('press 0 for all 3x5, 1 for all 4x6, 2 for all 4x8, 3 for all 4x12'))
     for i in range(num_panels):
+        if same_size == 1:
+            run_test(dexarm, dexarm_2, pile_loc, test_type - 1, size)  
         run_test(dexarm, dexarm_2, pile_loc, test_type - 1)
     time.sleep(4)
     dexarm.conveyor_belt_stop()
