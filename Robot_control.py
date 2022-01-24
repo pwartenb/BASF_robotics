@@ -13,7 +13,7 @@ import pickle
 '''windows'''
 #dexarm = Dexarm(port="COM67")
 '''mac & linux'''
-loaded_model = pickle.load(open('knnpickle_file_3', 'rb'))
+loaded_model = pickle.load(open('knnpickle_file_test', 'rb'))
 dexarm = Dexarm(port="/dev/ttyACM2") # initializes dexarm to correct port
 dexarm_2 = Dexarm(port="/dev/ttyACM3")
 
@@ -191,38 +191,48 @@ def find_length(dexarm, test_type):
     video.open(0,320,240)
     dexarm.conveyor_belt_forward(8300)
     start = time.perf_counter()
-    status = [None, None]
+    status = [None, None, None]
     while True:
         img = video.get_img(1)[:,:,::-1]
         img = trim_image(img)
         av_pixel = get_av_pixel(img)
         status.pop(0)
         status.append(is_pink(av_pixel))
-        if status == [False, False]:
+        if status == [False, False, False]:
             end = time.perf_counter()
-            dexarm.conveyor_belt_stop()
             elapsed = end - start
             dist = elapsed*71.0
-            length = (387 - dist)/25.4
-            if 3 < length < 5:
+            length = (382 - dist)/25.4
+            print(length)
+            if 3 < length < 5.65:
                 print("3x5 Panel")
+                t = (length - 5)*25.4/71
+                if t > 0:
+                    time.sleep(t)
                 if test_type < 2:
                     func = draw_35[test_type]
                     align_panel(dexarm, func)
                 else:
                     print("This test does not apply to 3x5 panels")
-            elif 5 < length < 7:
+            elif 5.65 < length < 7:
                 print("4x6 Panel")
+                t = (length - 6)*25.4/71
+                if t > 0:
+                    time.sleep(t)
                 func = draw_46[test_type] 
                 align_panel(dexarm, func)
             elif 7 < length < 10:
                 print("4x8 Panel")
+                t = (length - 8)*25.4/71
+                if t > 0:
+                    time.sleep(t)
                 func = draw_48[test_type]
                 align_panel(dexarm, func)
             elif 10 < length < 15:
-                # dexarm.conveyor_belt_stop()
-                # break
                 print("4x12 Panel")
+                t = (length - 12)*25.4/71
+                if t > 0:
+                    time.sleep(t)
                 func = draw_412[test_type]
                 align_panel(dexarm, func)
             #time.sleep(3)
@@ -258,10 +268,9 @@ if __name__ == "__main__":
     dexarm.fast_move_to(0, 280, 150)
     dexarm_2.fast_move_to(0, 280, 150)
     pile_loc = (-255, 0, -110)
-    [cross_46, vert_46, angle_46, horiz_46]
     num_panels = int(input('How many panels?'))
     test_type = int(input('Press 1 for cross pattern, 2 for vertical, 3 for angled, and 4 for horizontal'))
     for i in range(num_panels):
-        # run_test(dexarm)
         run_test(dexarm, dexarm_2, pile_loc, test_type - 1)
+    time.sleep(4)
     dexarm.conveyor_belt_stop()

@@ -16,6 +16,6 @@ def move_sample(current, obj_loc, dexarm):
     dexarm.soft_gripper_place()
     dexarm.fast_move_to(*above_obj)
     dexarm.fast_move_to(*behind_obj)
-    dexarm.fast_move_to(0, 280, 60)
-    dexarm.fast_move_to(0, 280, 25)
+    dexarm.fast_move_to(0, 288, 60)
+    dexarm.fast_move_to(0, 288, 25)
     dexarm.soft_gripper_nature()

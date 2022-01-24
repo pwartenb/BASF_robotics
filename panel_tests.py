@@ -19,16 +19,15 @@ def vert_35(dexarm):
     Takes film thickness measurements at all 7
     required spots for 4x6 Ford panel
     '''
-    dexarm.conveyor_belt_forward(8300)
-    time.sleep(0.6)
+    time.sleep(0.45)
     dexarm.conveyor_belt_stop()
     take_sample(dexarm, (41, 250, -40)) # calls take sample with specified location
-    take_sample(dexarm, (14, 280, -40))
-    take_sample(dexarm, (-10 + 14, 280, -40))
-    take_sample(dexarm, (-20 + 14, 280, -40))
-    take_sample(dexarm, (-30 + 14, 280, -40))
-    take_sample(dexarm, (-40 + 14, 280, -40))
-    take_sample(dexarm, (41, 312, -40))
+    take_sample(dexarm, (14, 272, -40))
+    take_sample(dexarm, (-10 + 14, 272, -40))
+    take_sample(dexarm, (-20 + 14, 272, -40))
+    take_sample(dexarm, (-30 + 14, 272, -40))
+    take_sample(dexarm, (-40 + 14, 272, -40))
+    take_sample(dexarm, (41, 294, -40))
     dexarm.fast_move_to(0, 280, 150) # return to starting position
 
 def vert_46(dexarm):
@@ -37,8 +36,7 @@ def vert_46(dexarm):
     Takes film thickness measurements at all 7
     required spots for 4x6 Ford panel
     '''
-    dexarm.conveyor_belt_forward(8300)
-    time.sleep(0.6)
+    time.sleep(0.45)
     dexarm.conveyor_belt_stop()
     take_sample(dexarm, (41, 250, -40)) # calls take sample with specified location
     take_sample(dexarm, (0, 280, -40))
@@ -55,8 +53,7 @@ def vert_48(dexarm):
     Takes film thickness measurements at all 7
     required spots for 4x6 Ford panel
     '''
-    dexarm.conveyor_belt_forward(8300)
-    time.sleep(1)
+    time.sleep(.9)
     dexarm.conveyor_belt_stop()
     take_sample(dexarm, (75, 250, -40))
     take_sample(dexarm, (0, 280, -40))
@@ -68,8 +65,7 @@ def vert_48(dexarm):
     dexarm.fast_move_to(0, 280, 150) # return to starting position
 
 def vert_412(dexarm):
-    dexarm.conveyor_belt_forward(8300)
-    time.sleep(2)
+    time.sleep(2.15)
     dexarm.conveyor_belt_stop()
     take_sample(dexarm, (146, 250, -40))
     take_sample(dexarm, (5, 280, -40))
@@ -86,8 +82,7 @@ def horiz_46(dexarm):
     Takes film thickness measurements at all 7
     required spots for 4x6 Ford panel
     '''
-    dexarm.conveyor_belt_forward(8300)
-    time.sleep(0.6)
+    time.sleep(0.45)
     dexarm.conveyor_belt_stop()
     take_sample(dexarm, (41, 250, -40)) # calls take sample with specified location
     take_sample(dexarm, (-20, 320 - 60, -40))
@@ -104,8 +99,7 @@ def horiz_48(dexarm):
     Takes film thickness measurements at all 7
     required spots for 4x6 Ford panel
     '''
-    dexarm.conveyor_belt_forward(8300)
-    time.sleep(1)
+    time.sleep(.9)
     dexarm.conveyor_belt_stop()
     take_sample(dexarm, (75, 250, -40))
     take_sample(dexarm, (-20, 260, -40))
@@ -117,8 +111,7 @@ def horiz_48(dexarm):
     dexarm.fast_move_to(0, 280, 150) # return to starting position
 
 def horiz_412(dexarm):
-    dexarm.conveyor_belt_forward(8300)
-    time.sleep(2)
+    time.sleep(2.15)
     dexarm.conveyor_belt_stop()
     take_sample(dexarm, (146, 250, -40))
     take_sample(dexarm, (-15, 260, -40))
@@ -135,26 +128,25 @@ def cross_35(dexarm):
     Takes film thickness measurements at all 7
     required spots for 4x6 Ford panel
     '''
-    dexarm.conveyor_belt_forward(8300)
-    time.sleep(0.6)
+    time.sleep(0.45)
     dexarm.conveyor_belt_stop()
     take_sample(dexarm, (41, 250, -40)) # calls take sample with specified location
     
-    take_sample(dexarm, (-6 + 2*8.7, 270, -40))
-    take_sample(dexarm, (-6 + 8.7, 275, -40))
+    take_sample(dexarm, (-6 + 2*8.7, 262, -40))
+    take_sample(dexarm, (-6 + 8.7, 267, -40))
 
-    take_sample(dexarm, (-6, 280, -40))
+    take_sample(dexarm, (-6, 272, -40))
 
-    take_sample(dexarm, (-6 - 8.7, 275, -40))
-    take_sample(dexarm, (-6 - 2*8.7, 270, -40))
+    take_sample(dexarm, (-6 - 8.7, 267, -40))
+    take_sample(dexarm, (-6 - 2*8.7, 262, -40))
 
-    take_sample(dexarm, (-6 + 8.7, 285, -40))
-    take_sample(dexarm, (-6 + 2*8.7, 290, -40))
+    take_sample(dexarm, (-6 + 8.7, 277, -40))
+    take_sample(dexarm, (-6 + 2*8.7, 282, -40))
 
-    take_sample(dexarm, (-6 - 8.7, 285, -40))
-    take_sample(dexarm, (-6 - 2*8.7, 290, -40))
+    take_sample(dexarm, (-6 - 8.7, 277, -40))
+    take_sample(dexarm, (-6 - 2*8.7, 282, -40))
 
-    take_sample(dexarm, (41, 312, -40))
+    take_sample(dexarm, (41, 294, -40))
     dexarm.fast_move_to(0, 280, 150) 
 
 def cross_46(dexarm):
@@ -163,8 +155,7 @@ def cross_46(dexarm):
     Takes film thickness measurements at all 7
     required spots for 4x6 Ford panel
     '''
-    dexarm.conveyor_belt_forward(8300)
-    time.sleep(0.6)
+    time.sleep(0.45)
     dexarm.conveyor_belt_stop()
     take_sample(dexarm, (41, 250, -40)) # calls take sample with specified location
     
@@ -186,8 +177,7 @@ def cross_46(dexarm):
     dexarm.fast_move_to(0, 280, 150) # return to starting position
 
 def cross_48(dexarm):
-    dexarm.conveyor_belt_forward(8300)
-    time.sleep(1)
+    time.sleep(.9)
     dexarm.conveyor_belt_stop()
     take_sample(dexarm, (75, 250, -40))
     
@@ -209,8 +199,7 @@ def cross_48(dexarm):
     dexarm.fast_move_to(0, 280, 150) # return to starting position
 
 def cross_412(dexarm):
-    dexarm.conveyor_belt_forward(8300)
-    time.sleep(2)
+    time.sleep(2.15)
     dexarm.conveyor_belt_stop()
     take_sample(dexarm, (146, 250, -40))
     
@@ -237,8 +226,7 @@ def angle_46(dexarm):
     Takes film thickness measurements at all 7
     required spots for 4x6 Ford panel
     '''
-    dexarm.conveyor_belt_forward(8300)
-    time.sleep(0.6)
+    time.sleep(0.45)
     dexarm.conveyor_belt_stop()
     take_sample(dexarm, (41, 250, -40)) # calls take sample with specified location
     take_sample(dexarm, (-55, 320 - 60, -40))
@@ -257,8 +245,7 @@ def angle_46(dexarm):
     dexarm.fast_move_to(0, 280, 150) # return to starting position
 
 def angle_48(dexarm):
-    dexarm.conveyor_belt_forward(8300)
-    time.sleep(1)
+    time.sleep(.9)
     dexarm.conveyor_belt_stop()
     take_sample(dexarm, (75, 250, -40))
 
@@ -278,8 +265,7 @@ def angle_48(dexarm):
     dexarm.fast_move_to(0, 280, 150) # return to starting position
 
 def angle_412(dexarm):
-    dexarm.conveyor_belt_forward(8300)
-    time.sleep(2)
+    time.sleep(2.15)
     dexarm.conveyor_belt_stop()
     take_sample(dexarm, (146, 250, -40))
 
