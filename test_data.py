@@ -10,7 +10,7 @@ import pandas as pd
 import csv
 import pickle
 
-dexarm = Dexarm(port="/dev/ttyACM0")
+# dexarm = Dexarm(port="/dev/ttyACM0")
 
 def trim_image(im):
     '''
@@ -19,8 +19,8 @@ def trim_image(im):
     for more accurate sensing of panel
     '''
     list_im = list(im)
-    x_start = 198
-    x_end = 380
+    x_start = 148
+    x_end = 330
     y_start = 270
     y_end = 370
     new_im = list_im[x_start: x_end+1]
@@ -51,11 +51,6 @@ def get_pic():
     im = trim_image(frame[:,:,::-1])
     return im
 
-rm, rs = 188.3378184797758, 65.11833826181713
-gm, gs = 120.33748490909115, 53.352200935211435
-bm, bs = 155.1103771075327, 47.97257529192781
-
-loaded_model = pickle.load(open('knnpickle_file_3', 'rb'))
 im = get_pic()
 av_pixel = get_av_pixel(im)
 print(av_pixel)
@@ -65,19 +60,10 @@ current = int(input("0 for not pink, 1 for pink"))
 rows = []
 classify = ""
 while current != 2:
-    dexarm.conveyor_belt_forward(8300)
-    time.sleep(.8)
-    dexarm.conveyor_belt_stop()
     if current == 0:
         classify = "Not Pink"
     else:
         classify = "Pink"
-    # s = time.perf_counter()
-    # new_pixel = np.array([(av_pixel[0] - rm)/rs, (av_pixel[1] - gm)/gs, (av_pixel[2] - bm)/bs])
-    # result = loaded_model.predict(new_pixel.reshape(1, -1)) 
-    # end = time.perf_counter()
-    # print(end - s)
-    # print(result)
     rows.append({'Pixels': list(av_pixel), 'Classification': classify})
     im = get_pic()
     av_pixel = get_av_pixel(im)
@@ -89,5 +75,4 @@ filename = 'training_data.csv'
 fields = ['Pixels', 'Classification']
 with open(filename, 'a') as csvfile:
     writer = csv.DictWriter(csvfile, fieldnames = fields) 
-    #writer.writeheader()
     writer.writerows(rows)
