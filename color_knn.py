@@ -49,7 +49,7 @@ df_feat = pd.DataFrame(scaled_features, columns = df.columns[:-1])
 from sklearn.model_selection import train_test_split
   
 X_train, X_test, y_train, y_test = train_test_split(
-      scaled_features, df['Classification'], test_size = 0.30)
+      scaled_features, df['Classification'], test_size = 0.10)
   
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report, confusion_matrix
@@ -86,5 +86,5 @@ print(classification_report(y_test, pred))
 # plt.ylabel('Error Rate')
 # plt.show()
 
-# knnPickle = open('knnpickle_file_add', 'wb')
-# pickle.dump(knn, knnPickle)
+knnPickle = open('knnpickle_file_add', 'wb')
+pickle.dump(knn, knnPickle)
