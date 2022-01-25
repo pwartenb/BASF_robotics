@@ -13,7 +13,7 @@ from panel_tests import *
 '''windows'''
 #dexarm = Dexarm(port="COM67")
 '''mac & linux'''
-dexarm = Dexarm(port="/dev/ttyACM2")
+dexarm = Dexarm(port= "/dev/serial/by-id/usb-STMicroelectronics_STM32F407ZG_CDC_in_FS_Mode_355E358A3236-if00") # initializes dexarm to correct port
 loaded_model = pickle.load(open('knnpickle_file_3', 'rb'))
 
 def trim_image(im): #415
@@ -46,24 +46,35 @@ def get_av_pixel(im):
     return total/total_num
 
 def is_pink(av_pixel):
-    rm, rs = 188.3378184797758, 65.11833826181713
-    gm, gs = 120.33748490909115, 53.352200935211435
-    bm, bs = 155.1103771075327, 47.97257529192781
+    rm, rs = 190.1140793035982, 64.62080070511523
+    gm, gs = 121.38619329631166, 54.87398367095535
+    bm, bs = 157.78315867205592, 47.83189991536432
     new_pixel = np.array([(av_pixel[0] - rm)/rs, (av_pixel[1] - gm)/gs, (av_pixel[2] - bm)/bs])
     result = loaded_model.predict(new_pixel.reshape(1, -1)) 
     return result == 'Pink'
 
+# dexarm.go_home()
+# dexarm.fast_move_to(0, 280, 150)
+# dexarm.conveyor_belt_stop()
+# dexarm.conveyor_belt_forward(8300)
+# video.open(0,320,240)
+# img = video.get_img(1)[:,:,::-1]
+# img = trim_image(img)
+# av_pixel = get_av_pixel(img)
+# while is_pink(av_pixel):
+#     plt.imshow(img)
+#     plt.show()
+#     img = video.get_img(1)[:,:,::-1]
+#     img = trim_image(img)
+#     av_pixel = get_av_pixel(img)
+#     dexarm.conveyor_belt_forward(8300)
+#     time.sleep(1.5)
+#     dexarm.conveyor_belt_stop()
+
+# horiz_412(dexarm)
+
 dexarm.go_home()
 dexarm.fast_move_to(0, 280, 150)
-dexarm.conveyor_belt_stop()
-dexarm.conveyor_belt_forward(8300)
-video.open(0,320,240)
-img = video.get_img(1)[:,:,::-1]
-img = trim_image(img)
-av_pixel = get_av_pixel(img)
-while is_pink(av_pixel):
-    img = video.get_img(1)[:,:,::-1]
-    img = trim_image(img)
-    av_pixel = get_av_pixel(img)
-
-horiz_412(dexarm)
+pile_loc = (-245, 0, -110)
+current = [0, 280, 150]
+move_sample(current[:3], pile_loc, dexarm)

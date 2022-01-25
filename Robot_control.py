@@ -16,7 +16,6 @@ import pickle
 loaded_model = pickle.load(open('knnpickle_file_add', 'rb'))
 dexarm_2 = Dexarm(port= "/dev/serial/by-id/usb-STMicroelectronics_STM32F407ZG_CDC_in_FS_Mode_355E358A3236-if00") # initializes dexarm to correct port
 dexarm = Dexarm(port= "/dev/serial/by-id/usb-STMicroelectronics_STM32F407ZG_CDC_in_FS_Mode_336336523439-if00")
-#dexarm_2 = Dexarm(port="/dev/ttyACM0")
 
 tar_color = 'green'
 color_dict = {'red': {'Lower': np.array([127, 60, 171]), 'Upper': np.array([188, 197, 255])},
@@ -203,8 +202,8 @@ def find_length(dexarm, test_type):
             end = time.perf_counter()
             elapsed = end - start
             dist = elapsed*71.0
-            length = (382 - dist)/25.4
-            print(length)
+            length = (365 - dist)/25.4
+            # print(length)
             if 3 < length < 5.65:
                 print("3x5 Panel")
                 t = (length - 5)*25.4/71
@@ -249,19 +248,19 @@ def all_same(dexarm, test_type, size):
     '''
     dexarm.conveyor_belt_forward(8300)
     if size == 0:
-        time.sleep(4.0) # test time for 3x5
+        time.sleep(3.8) # test time for 3x5
         func = draw_35[test_type]
         align_panel(dexarm, func)
     elif size == 1:
-        time.sleep(3.7) # test time for 4x6
+        time.sleep(3.5) # test time for 4x6
         func = draw_46[test_type]
         align_panel(dexarm, func)
     elif size == 2:
-        time.sleep(3.0) # test time for 4x8
+        time.sleep(2.8) # test time for 4x8
         func = draw_48[test_type]
         align_panel(dexarm, func)
     elif size == 3:
-        time.sleep(1.4) # test time for 4x12
+        time.sleep(1.6) # test time for 4x12
         func = draw_412[test_type]
         align_panel(dexarm, func)    
     dexarm.conveyor_belt_forward(8300)
@@ -300,12 +299,12 @@ if __name__ == "__main__":
     pile_loc = (-245, 0, -110)
     num_panels = int(input('How many panels?: '))
     test_type = int(input('Press 1 for cross pattern, 2 for vertical, 3 for angled, and 4 for horizontal: '))
-    same_size = int(input('Press 1 if all panels same size, otherwise 0: '))
+    same_size = int(input('Press 1 if all panels same size, otherwise 2: '))
     if same_size == 1:
-        size = int(input('Press 0 for all 3x5, 1 for all 4x6, 2 for all 4x8, 3 for all 4x12: '))
+        size = int(input('Press 1 for all 3x5, 2 for all 4x6, 3 for all 4x8, 4 for all 4x12: '))
     for i in range(num_panels):
         if same_size == 1:
-            run_test(dexarm, dexarm_2, pile_loc, test_type - 1, size) 
+            run_test(dexarm, dexarm_2, pile_loc, test_type - 1, size - 1) 
         else:
             run_test(dexarm, dexarm_2, pile_loc, test_type - 1)
     time.sleep(4)
