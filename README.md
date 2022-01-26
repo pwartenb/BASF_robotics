@@ -3,25 +3,35 @@
 Files used to automate film thickness test. Uses two rotrics arm one equipped with vacuum pump other has probe. Camera is mounter across from arm that has the probe. Camera is used to calculate panel length, which determines where probe is to take measurements. In order to determine length camera senses color difference between panel and pink tape uses KNN. Input of KNN is RGB pixel average of image and outputs panel or not panel. Second arm loads and unloads panels from conveyor belt. Controlled using a raspbery pi.
 
 User Guide:
+    
+    1. Make sure both robots are turned on. A green light on the back of the bot indicates it is on.
 
-    1. open terminal
+    2. open terminal
     
-    2. type command: cd /Downloads/BASF_robotics and press enter
+    3. type command: cd /Downloads/BASF_robotics and press enter
     
-    3. type python3 Robot_control.py and press enter
+    4. type python3 Robot_control.py and press enter
     
-    4. Input number of panels and test type press enter and robot is ready to go 
+    5. Input number of panels and test type press enter and robot is ready to go 
     
-    5. A few common errors are with the serial ports if is says there is a communication error
-    or that the serial port is busy type python3 Robot_control.py and press enter
+Common Errors:
+
+    1. If the robot was just turned on or if itbeing used for the first time that today
+    the computer may struggle to connect iwht the robot. IF one or both of the arms does 
+    not move when it should this is likely the cause. To solve this either close the terminal 
+    and start again or press contorl c, which kills the program, and run python3 Robot_control.py 
+    again. 
     
-    6. Another common error is a unable to open port no such file or directory.
+    2. A second common problem is when the program fails to run and throws an error that says device or
+    resource busy. This is also a connenction issue that can sometimes happen when the robot was just turned on.
+    If this is case run python3 Robot_control.py again. Sometimes you will hve to run the program two or three times 
+    before the computer connects with the robot. 
     
-    7. In this case open the Robot_control.py file and change the serial port it is connected to.
+Raspberry Pi Guide:
+
+    1. Turn on by holding the power switch on the side.
     
-    8. To find the correct port open a new terminal type cd /dev enter and then ls enter. Look fir the ports 
-    that start with ttyA. Common names are ttyACM0, ttyACM1, ttyACM2, or ttyAMA0.
+    2. It can often take a few minutes to boot up. If a 4 appears on the screen this means it is booting up.
     
-    9. A third error is if the two arms collide with each other in this case press control c to kill the program 
-    and flip the ports that the arms are connected to.
-    
+    3. If the screen displays a picture of an sd card with an arrow to a computer this means the SD card has come loose. 
+    In this case remove the panel that covers the SD card, take out the SD card, and reinsert it.
