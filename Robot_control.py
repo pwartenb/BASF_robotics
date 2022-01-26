@@ -13,7 +13,7 @@ import pickle
 '''windows'''
 #dexarm = Dexarm(port="COM67")
 '''mac & linux'''
-loaded_model = pickle.load(open('knnpickle_file_add', 'rb'))
+loaded_model = pickle.load(open('knnpickle_file_aug', 'rb'))
 dexarm_2 = Dexarm(port= "/dev/serial/by-id/usb-STMicroelectronics_STM32F407ZG_CDC_in_FS_Mode_355E358A3236-if00") # initializes dexarm to correct port
 dexarm = Dexarm(port= "/dev/serial/by-id/usb-STMicroelectronics_STM32F407ZG_CDC_in_FS_Mode_336336523439-if00")
 
@@ -188,56 +188,58 @@ def find_length(dexarm, test_type):
     then returns panel to mosition under vacuum pump so it can be
     placed on the done pile. Returns nothing.
     '''
-    video.open(0,320,240)
-    dexarm.conveyor_belt_forward(8300)
+    current = [True, True, True]
     start = time.perf_counter()
-    status = [None, None, None]
-    while True:
+    video.open(0,320,240)
+    while current.count(True) > 1:
         img = video.get_img(1)[:,:,::-1]
         img = trim_image(img)
         av_pixel = get_av_pixel(img)
-        status.pop(0)
-        status.append(is_pink(av_pixel))
-        if status == [False, False, False]:
-            end = time.perf_counter()
-            elapsed = end - start
-            dist = elapsed*71.0
-            length = (365 - dist)/25.4
-            # print(length)
-            if 3 < length < 5.65:
-                print("3x5 Panel")
-                t = (length - 5)*25.4/71
-                if t > 0:
-                    time.sleep(t)
-                if test_type < 2:
-                    func = draw_35[test_type]
-                    align_panel(dexarm, func)
-                else:
-                    print("This test does not apply to 3x5 panels")
-            elif 5.65 < length < 7:
-                print("4x6 Panel")
-                t = (length - 6)*25.4/71
-                if t > 0:
-                    time.sleep(t)
-                func = draw_46[test_type] 
-                align_panel(dexarm, func)
-            elif 7 < length < 10:
-                print("4x8 Panel")
-                t = (length - 8)*25.4/71
-                if t > 0:
-                    time.sleep(t)
-                func = draw_48[test_type]
-                align_panel(dexarm, func)
-            elif 10 < length < 15:
-                print("4x12 Panel")
-                t = ((length - 12)*25.4/71) - .15
-                if t > 0:
-                    time.sleep(t)
-                func = draw_412[test_type]
-                align_panel(dexarm, func)
-            #time.sleep(3)
-            dexarm.conveyor_belt_forward(8300)
-            break
+        current.pop(0)
+        current.append(is_pink(av_pixel))
+
+    end = time.perf_counter()
+    # print(av_pixel)
+    # dexarm.conveyor_belt_stop()
+    # plt.imshow(img)
+    # plt.show()
+    # dexarm.conveyor_belt_forward(8300)
+    elapsed = end - start
+    dist = elapsed*71.0
+    length = (400 - dist)/25.4
+    # print(length)
+    if 3 < length < 5.5:
+        print("3x5 Panel")
+        t = (length - 5)*25.4/71
+        if t > 0:
+            time.sleep(t)
+        if test_type < 2:
+            func = draw_35[test_type]
+            align_panel(dexarm, func)
+        else:
+            print("This test does not apply to 3x5 panels")
+    elif 5.5 < length < 7:
+        print("4x6 Panel")
+        t = (length - 6)*25.4/71
+        if t > 0:
+            time.sleep(t)
+        func = draw_46[test_type] 
+        align_panel(dexarm, func)
+    elif 7 < length < 9.5:
+        print("4x8 Panel")
+        t = (length - 8)*25.4/71
+        if t > 0:
+            time.sleep(t)
+        func = draw_48[test_type]
+        align_panel(dexarm, func)
+    elif 9.5 < length < 15:
+        print("4x12 Panel")
+        t = ((length - 12)*25.4/71)
+        if t > 0:
+            time.sleep(t)
+        func = draw_412[test_type]
+        align_panel(dexarm, func)
+    dexarm.conveyor_belt_forward(8300)
     video.close()
 
 def all_same(dexarm, test_type, size):
@@ -281,6 +283,10 @@ def run_test(dexarm, dexarm_2 = 0, pile_loc = 0, test_type = 0, size = None):
 
 
 def is_pink(av_pixel):
+    total = sum(av_pixel)/3
+    if total > 251:
+        #print('filter')
+        return True
     rm, rs = 190.1140793035982, 64.62080070511523
     gm, gs = 121.38619329631166, 54.87398367095535
     bm, bs = 157.78315867205592, 47.83189991536432
@@ -307,5 +313,5 @@ if __name__ == "__main__":
             run_test(dexarm, dexarm_2, pile_loc, test_type - 1, size - 1) 
         else:
             run_test(dexarm, dexarm_2, pile_loc, test_type - 1)
-    time.sleep(4)
+    time.sleep(3)
     dexarm.conveyor_belt_stop()

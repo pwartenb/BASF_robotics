@@ -65,7 +65,7 @@ def vert_48(dexarm):
     dexarm.fast_move_to(0, 280, 150) # return to starting position
 
 def vert_412(dexarm):
-    time.sleep(2.15)
+    time.sleep(2.0)
     dexarm.conveyor_belt_stop()
     take_sample(dexarm, (146, 250, -40))
     take_sample(dexarm, (5, 280, -40))
@@ -111,7 +111,7 @@ def horiz_48(dexarm):
     dexarm.fast_move_to(0, 280, 150) # return to starting position
 
 def horiz_412(dexarm):
-    time.sleep(2.15)
+    time.sleep(2.0)
     dexarm.conveyor_belt_stop()
     take_sample(dexarm, (146, 250, -40))
     take_sample(dexarm, (-15, 260, -40))
@@ -199,7 +199,7 @@ def cross_48(dexarm):
     dexarm.fast_move_to(0, 280, 150) # return to starting position
 
 def cross_412(dexarm):
-    time.sleep(2.15)
+    time.sleep(2.0)
     dexarm.conveyor_belt_stop()
     take_sample(dexarm, (146, 250, -40))
     
@@ -265,7 +265,7 @@ def angle_48(dexarm):
     dexarm.fast_move_to(0, 280, 150) # return to starting position
 
 def angle_412(dexarm):
-    time.sleep(2.15)
+    time.sleep(2.0)
     dexarm.conveyor_belt_stop()
     take_sample(dexarm, (146, 250, -40))
 
