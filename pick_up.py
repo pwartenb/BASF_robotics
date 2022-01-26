@@ -7,7 +7,7 @@ def move_sample(current, obj_loc, dexarm):
     Uses vaccum pump attachment to retrieve object 
     and bring it to current location
     '''
-    above_obj = (obj_loc[0], obj_loc[1], 45)
+    above_obj = (obj_loc[0] + 5, obj_loc[1], 45)
     behind_obj = (obj_loc[0] + 55, obj_loc[1], 30)
     dexarm.set_module_type(2)
     dexarm.fast_move_to(*above_obj)
@@ -17,5 +17,5 @@ def move_sample(current, obj_loc, dexarm):
     dexarm.fast_move_to(*behind_obj)
     dexarm.fast_move_to(0, 260, 65)
     dexarm.fast_move_to(0, 260, 20)
-    dexarm.fast_move_to(0, 280, 20)
+    dexarm.fast_move_to(0, 284, 20)
     dexarm.soft_gripper_nature()
