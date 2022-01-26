@@ -5,19 +5,21 @@ Files used to automate film thickness test. Uses two rotrics arm one equipped wi
 User Guide:
     
     1. Make sure both robots are turned on. A green light on the back of the bot indicates it is on.
+    
+    2. Allign panel using T-rail and tape. If panel is 4x12 align with far edge of pink tape otherwise align with silver line.
 
-    2. open terminal
+    3. open terminal
     
-    3. type command: cd /Downloads/BASF_robotics and press enter
+    4. type command: cd /Downloads/BASF_robotics and press enter
     
-    4. type python3 Robot_control.py and press enter
+    5. type python3 Robot_control.py and press enter
     
-    5. Input number of panels and test type press enter and robot is ready to go 
+    6. Input number of panels and test type press enter and robot is ready to go 
     
 Common Errors:
 
     1. If the robot was just turned on or if itbeing used for the first time that today
-    the computer may struggle to connect iwht the robot. IF one or both of the arms does 
+    the computer may struggle to connect iwht the robot. If one or both of the arms does 
     not move when it should this is likely the cause. To solve this either close the terminal 
     and start again or press contorl c, which kills the program, and run python3 Robot_control.py 
     again. 
