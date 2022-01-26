@@ -229,17 +229,17 @@ def angle_46(dexarm):
     time.sleep(0.45)
     dexarm.conveyor_belt_stop()
     take_sample(dexarm, (41, 250, -40)) # calls take sample with specified location
-    take_sample(dexarm, (-55 + 60, 320 - 60, -40))
-    take_sample(dexarm, (-55 + 60, 330 - 60, -40))
-    take_sample(dexarm, (-55 + 60, 340 - 60, -40))
-    take_sample(dexarm, (-55 + 60, 350 - 60, -40))
-    take_sample(dexarm, (-55 + 60, 360 - 60, -40))
+    take_sample(dexarm, (-55 + 75, 320 - 60, -40))
+    take_sample(dexarm, (-55 + 75, 330 - 60, -40))
+    take_sample(dexarm, (-55 + 75, 340 - 60, -40))
+    take_sample(dexarm, (-55 + 75, 350 - 60, -40))
+    take_sample(dexarm, (-55 + 75, 360 - 60, -40))
 
-    take_sample(dexarm, (2*8.7 - 60, 270, -40))
-    take_sample(dexarm, (8.7 - 60, 275, -40))
-    take_sample(dexarm, (-60, 280, -40))
-    take_sample(dexarm, (-8.7 - 60, 285, -40))
-    take_sample(dexarm, (-2*8.7 - 60, 290, -40))
+    take_sample(dexarm, (2*8.7 - 45, 270, -40))
+    take_sample(dexarm, (8.7 - 45, 275, -40))
+    take_sample(dexarm, (-45, 280, -40))
+    take_sample(dexarm, (-8.7 - 45, 285, -40))
+    take_sample(dexarm, (-2*8.7 - 45, 290, -40))
 
     take_sample(dexarm, (41, 312, -40))
     dexarm.fast_move_to(0, 280, 150) # return to starting position
