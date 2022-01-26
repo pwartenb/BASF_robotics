@@ -17,6 +17,11 @@ loaded_model = pickle.load(open('knnpickle_file_aug', 'rb'))
 dexarm_2 = Dexarm(port= "/dev/serial/by-id/usb-STMicroelectronics_STM32F407ZG_CDC_in_FS_Mode_355E358A3236-if00") # initializes dexarm to correct port
 dexarm = Dexarm(port= "/dev/serial/by-id/usb-STMicroelectronics_STM32F407ZG_CDC_in_FS_Mode_336336523439-if00")
 
+draw_35 = [cross_35, vert_35]
+draw_46 = [cross_46, vert_46, angle_46, horiz_46]
+draw_48 = [cross_48, vert_48, angle_48, horiz_48]
+draw_412 = [cross_412, vert_412, angle_412, horiz_412]
+
 def trim_image(im): #415
     '''
     takes in image and trims to only view conveyor
@@ -182,9 +187,9 @@ if __name__ == "__main__":
         if remaining > 15: # z location of pil is moved up when a large number of panels is present
             dif = remaining - 20
             inc = int(dif/5)
-            pile_loc = (-243, 0, -110 + inc)
+            pile_loc = (-245, 0, -110 + inc)
         else:
-            pile_loc = (-243, 0, -110)
+            pile_loc = (-245, 0, -110)
         if same_size == 1: # all panles are same size
             run_test(dexarm, dexarm_2, pile_loc, test_type - 1, size - 1) 
         else:
